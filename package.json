@@ -1,0 +1,28 @@
+{
+  "name": "proxy-third-party-apis",
+  "private": true,
+  "version": "0.1.0",
+  "author": "tldr",
+  "contributors": [
+    "Stanislas Marion",
+    "Charles Miglietti",
+    "Louis Chatriot"
+  ],
+  "description": "crowdsourced summaries",
+  "keywords": [
+    "summary",
+    "tldr"
+  ],
+  "homepage": "http://tldr.io",
+  "engines": {
+    "node": "0.8.2",
+    "npm": "1.1.42"
+  },
+  "dependencies": {
+    "express": "3.0.0rc5",
+    "request": "2.9.x"
+  },
+  "main": "server",
+  "licence": "fucking proprietary license"
+}
+
