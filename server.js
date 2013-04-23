@@ -44,11 +44,6 @@ server.use(CORS);
 server.use(express.bodyParser());
 server.use(server.router);
 
-
-server.get('/test', function (req, res, next) {
-  res.send(200);
-});
-
 server.post('/duckduckgo', routes.duckduckgo );
 
-server.listen(8989);
+server.listen(8914);
