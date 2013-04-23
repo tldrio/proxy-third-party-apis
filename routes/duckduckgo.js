@@ -32,6 +32,7 @@ module.exports = function (req, res, next) {
           return res.send(500, err);
         }
         results = _.filter(results, function(result) { return result.previewText;});
+        console.log('Results', results);
         res.json(200, results);
   });
 
