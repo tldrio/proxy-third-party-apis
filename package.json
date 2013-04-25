@@ -22,7 +22,8 @@
     "express": "3.0.0rc5",
     "request": "2.9.x",
     "async": "~0.2.7",
-    "underscore": "~1.4.4"
+    "underscore": "~1.4.4",
+    "redis": "~0.8.3"
   },
   "main": "server",
   "licence": "fucking proprietary license"
