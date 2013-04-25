@@ -10,6 +10,7 @@ module.exports = function (req, res, next) {
 
   async.map( req.body.batch
    , function (entry, callback) {
+      console.log('[REQUEST]', entry);
        request.get({ url: 'https://api.duckduckgo.com/?q=' + entry.replace(' ','+') +'&o=json'
                    , timeout: 500
                   }, function (err, res, body) {
@@ -33,11 +34,11 @@ module.exports = function (req, res, next) {
 
    }, function (err, results) {
         if (err) {
-          console.log('ERR', err);
+          console.log('[ERROR]', err);
           return res.send(408, err);
         }
         results = _.filter(results, function(result) { return result.previewText;});
-        console.log('Results', results);
+        console.log('[RESULTS]', results);
         res.json(200, results);
   });
 
