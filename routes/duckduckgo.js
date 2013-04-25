@@ -16,13 +16,17 @@ module.exports = function (req, res, next) {
                       return callback(err);
                     }
 
-                    var response = JSON.parse(body)
-                      , previewText = response.Abstract || response.Definition;
+                    try {
+                      var response = JSON.parse(body)
+                        , previewText = response.Abstract || response.Definition;
 
-                    if (previewText.length) {
-                      callback(null, { entry: entry, previewText: previewText, heading: response.Heading });
-                    } else {
-                      callback(null, {});
+                      if (previewText.length) {
+                        callback(null, { entry: entry, previewText: previewText, heading: response.Heading });
+                      } else {
+                        callback(null, {});
+                      }
+                    } catch(e) {
+                      return callback(e);
                     }
                   });
 
