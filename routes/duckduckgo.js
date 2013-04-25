@@ -11,6 +11,7 @@ module.exports = function (req, res, next) {
   async.map( req.body.batch
    , function (entry, callback) {
        request.get({ url: 'https://api.duckduckgo.com/?q=' + entry.replace(' ','+') +'&o=json'
+                   , timeout: 500
                   }, function (err, res, body) {
                     if (err) {
                       return callback(err);
