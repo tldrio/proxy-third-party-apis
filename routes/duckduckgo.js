@@ -34,7 +34,7 @@ module.exports = function (req, res, next) {
    }, function (err, results) {
         if (err) {
           console.log('ERR', err);
-          return res.send(500, err);
+          return res.send(408, err);
         }
         results = _.filter(results, function(result) { return result.previewText;});
         console.log('Results', results);
