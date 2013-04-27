@@ -45,5 +45,6 @@ server.use(express.bodyParser());
 server.use(server.router);
 
 server.post('/duckduckgo', routes.duckduckgo );
+server.post('/twitter', routes.twitter );
 
 server.listen(8914);

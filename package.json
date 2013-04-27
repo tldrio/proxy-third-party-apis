@@ -23,7 +23,8 @@
     "request": "2.9.x",
     "async": "~0.2.7",
     "underscore": "~1.4.4",
-    "redis": "~0.8.3"
+    "redis": "~0.8.3",
+    "ntwitter": "~0.5.0"
   },
   "main": "server",
   "licence": "fucking proprietary license"
