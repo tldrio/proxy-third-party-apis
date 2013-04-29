@@ -53,6 +53,8 @@ module.exports = function (req, res, next) {
           } else {
             result.profile_banner_url = 'https://abs.twimg.com/a/1366855397/t1/img/grey_header_web.png';
           }
+          // Just store the data we need
+          result = _.pick(result, 'screen_name','profile_banner_url', 'profile_image_url', 'name', 'description','statuses_count','friends_count','followers_count');
           obj = { entry: result.screen_name, result: result};
           client.set(prefix+ result.screen_name.toLowerCase() , JSON.stringify(obj));
           return obj;
