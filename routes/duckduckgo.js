@@ -28,7 +28,7 @@ module.exports = function (req, res, next) {
                    , timeout: 1000
                   }, function (err, res, body) {
                     if (err) {
-                        console.log('[ERR] On single request',err);
+                        console.log('[ERR] On single request',entry, err);
                       return callback(err);
                     }
 
