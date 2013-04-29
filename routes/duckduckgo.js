@@ -24,7 +24,7 @@ module.exports = function (req, res, next) {
         }
         else {
          console.log('[ASK DDG]', entry);
-         request.get({ url: 'https://api.duckduckgo.com/?q=' + entry.replace(' ','+') +'&o=json'
+         request.get({ url: 'https://api.duckduckgo.com/?q=' + entry.replace(' ','+') +'&o=json&t=tldr'
                    , timeout: 1000
                   }, function (err, res, body) {
                     if (err) {
