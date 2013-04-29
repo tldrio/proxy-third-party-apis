@@ -35,7 +35,7 @@ module.exports = function (req, res, next) {
                     try {
                       var response = JSON.parse(body)
                         , previewText = response.Abstract || response.Definition;
-                        console.log('[DDG][RESPONSE]', entry, previewText);
+                        console.log('[DDG][RESPONSE]', entry);
 
                       if (previewText.length) {
                         client.set(prefix+ entry, JSON.stringify({ entry: entry, previewText: previewText, heading: response.Heading }));
@@ -55,11 +55,11 @@ module.exports = function (req, res, next) {
 
    }, function (err, results) {
         if (err) {
-          console.log('[DDG][ERROR] in batch', err, results);
+          console.log('[DDG][ERROR] in batch', err);
           return res.send(408, err);
         }
         results = _.filter(results, function(result) { return result.previewText;});
-        console.log('[DDG][RESULTS]', results);
+        console.log('[DDG][RESULTS]', _.pluck(results, 'entry'));
         res.json(200, results);
   });
 
