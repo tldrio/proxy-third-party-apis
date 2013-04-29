@@ -20,18 +20,16 @@ module.exports = function (req, res, next) {
 
   //ad hoc blacklist
   batch = _.without(batch, 'share');
-  console.log('BATCH', batch);
+  console.log('[TWITTER][BATCH]', batch);
   async.map( batch, function (entry, callback) {
     client.get(prefix+ entry.toLowerCase(), function (err, reply) {
       if (err) {
         return callback(err);
       }
       if (reply) {
-        console.log('[CACHE]', entry);
         callback(null, JSON.parse(reply));
       }
       else {
-        console.log('[ASK TWITTER]', entry);
         callback(null, { entry: entry });
       }
     });
@@ -39,12 +37,13 @@ module.exports = function (req, res, next) {
   }, function (err, resultsFromCache) {
     var nonCachedEntries = _.pluck(_.filter(resultsFromCache, function (element) { return !element.result;}), 'entry')
       , cachedResults = _.filter(resultsFromCache, function (element) { return element.result;});
-    console.log('[NONCACHED]', nonCachedEntries);
+    console.log('[TWITTER][NONCACHED]', nonCachedEntries);
+    console.log('[TWITTER][CACHED]', cachedResults);
 
     if (nonCachedEntries.length) {
       twit.showUser(batch.toString(), function (err, results) {
         if (err) {
-          console.log('[ERROR]', err);
+          console.log('[TWITTER][ERROR]', err);
           res.json(408);
         }
         results = _.map(results, function (result) {
