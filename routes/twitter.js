@@ -40,19 +40,23 @@ module.exports = function (req, res, next) {
     console.log('[NONCACHED]', nonCachedEntries);
 
     if (nonCachedEntries.length) {
-      twit.showUser(nonCachedEntries.toString(), function (err, results) {
+      twit.showUser(batch.toString(), function (err, results) {
         if (err) {
           console.log('[ERROR]', err);
           res.json(408);
         }
         results = _.map(results, function (result) {
           var obj;
-          result.profile_banner_url = result.profile_banner_url ? result.profile_banner_url + '/mobile' : 'https://abs.twimg.com/a/1366855397/t1/img/grey_header_web.png';
+          if (result.profile_banner_url && !result.profile_banner_url.match(/brand_banners/)) {
+            result.profile_banner_url = result.profile_banner_url + '/mobile';
+          } else {
+            result.profile_banner_url = 'https://abs.twimg.com/a/1366855397/t1/img/grey_header_web.png';
+          }
           obj = { entry: result.screen_name, result: result};
           client.set(prefix+ result.screen_name.toLowerCase() , JSON.stringify(obj));
           return obj;
         });
-        res.json(200, _.union(results, cachedResults));
+        res.json(200, results);
       });
     } else {
       res.json(200,  cachedResults);
