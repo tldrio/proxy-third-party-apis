@@ -18,6 +18,8 @@ module.exports = function (req, res, next) {
 
   if (!req.body.batch) { req.body.batch = []; }
 
+  //ad hoc blacklist
+  batch = _.without(batch, 'share');
   console.log('BATCH', batch);
   async.map( batch, function (entry, callback) {
     client.get(prefix+ entry.toLowerCase(), function (err, reply) {
