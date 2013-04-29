@@ -38,7 +38,7 @@ module.exports = function (req, res, next) {
     var nonCachedEntries = _.pluck(_.filter(resultsFromCache, function (element) { return !element.result;}), 'entry')
       , cachedResults = _.filter(resultsFromCache, function (element) { return element.result;});
     console.log('[TWITTER][NONCACHED]', nonCachedEntries);
-    console.log('[TWITTER][CACHED]', cachedResults);
+    console.log('[TWITTER][CACHED]', _.pluck(cachedResults, 'entry') );
 
     if (nonCachedEntries.length) {
       twit.showUser(batch.toString(), function (err, results) {
