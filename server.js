@@ -46,5 +46,6 @@ server.use(server.router);
 
 server.post('/duckduckgo', routes.duckduckgo );
 server.post('/twitter', routes.twitter );
+server.post('/youtube', routes.youtube );
 
 server.listen(8914);
