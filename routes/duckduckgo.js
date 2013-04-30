@@ -13,7 +13,6 @@ module.exports = function (req, res, next) {
   async.mapLimit( req.body.batch
    , 5
    , function (entry, callback) {
-      console.log('[DDG][REQUEST]', entry, req.ip);
       client.get(prefix+ entry, function (err, reply) {
         if (err) {
           return callback(err);
@@ -23,7 +22,7 @@ module.exports = function (req, res, next) {
           callback(null, JSON.parse(reply));
         }
         else {
-         console.log('[DDG][ASK]', entry);
+         console.log('[DDG][NONCACHE]', entry);
          request.get({ url: 'https://api.duckduckgo.com/?q=' + entry.replace(' ','+') +'&o=json&t=tldr'
                    , timeout: 1000
                   }, function (err, res, body) {

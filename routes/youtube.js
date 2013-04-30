@@ -21,7 +21,6 @@ module.exports = function (req, res, next) {
     request.get({ url: 'https://www.googleapis.com/youtube/v3/videos?id='+ entry +'&part=contentDetails,statistics,snippet&fields=*&key=AIzaSyDon29gmxcVt-GN6CUdK2vrwgMxJCcwv3o'
                }, function (err, res, body) {
 
-
       try {
         var response = JSON.parse(body).items[0]
           , likeCount = parseInt(response.statistics.likeCount,10)
