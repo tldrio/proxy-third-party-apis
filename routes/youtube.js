@@ -20,7 +20,7 @@ module.exports = function (req, res, next) {
         var response = JSON.parse(body).items[0]
           , likeCount = parseInt(response.statistics.likeCount,10)
           , dislikeCount = parseInt(response.statistics.dislikeCount,10)
-          , duration = response.contentDetails.duration.match(/PT(.*)M(.*)S/);
+          , duration = response.contentDetails.duration.match(/PT((\d{1,5})M)?((\d{1,2})S)?/);
 
         response = { viewCount: utils.formatNumber(response.statistics.viewCount,' ')
                    , likeCount: utils.formatNumber(likeCount, ' ')
@@ -30,7 +30,7 @@ module.exports = function (req, res, next) {
                    , title: response.snippet.title
                    , likePercentage: Math.round(100 * likeCount / (likeCount + dislikeCount))
                    , dislikePercentage: Math.round(100 * dislikeCount / (likeCount + dislikeCount))
-                   , duration: { minutes: duration[1], seconds: duration[2]}
+                   , duration: { minutes: duration[2] || '0' , seconds: duration[4]|| '00'}
         };
         console.log('[YOUTUBE][RESPONSE]', entry);
         callback(null, { entry: entry, result: response});
