@@ -2,13 +2,8 @@ var async = require('async')
   , request = require('request')
   , _ = require('underscore')
   , client = require('redis').createClient()
+  , utils = require('../lib/utils')
   , prefix = 'preview-youtube:';
-
-function numberWithCommas(x) {
-    var parts = x.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-}
 
 module.exports = function (req, res, next) {
    var batch = req.body.batch
@@ -27,10 +22,10 @@ module.exports = function (req, res, next) {
           , dislikeCount = parseInt(response.statistics.dislikeCount,10)
           , duration = response.contentDetails.duration.match(/PT(.*)M(.*)S/);
 
-        response = { viewCount: numberWithCommas(response.statistics.viewCount)
-                   , likeCount: numberWithCommas(likeCount)
-                   , dislikeCount: numberWithCommas(dislikeCount)
-                   , commentCount: numberWithCommas(response.statistics.commentCount)
+        response = { viewCount: utils.formatNumber(response.statistics.viewCount,' ')
+                   , likeCount: utils.formatNumber(likeCount, ' ')
+                   , dislikeCount: utils.formatNumber(dislikeCount, ' ')
+                   , commentCount: utils.formatNumber(response.statistics.commentCount, ' ')
                    , thumbnail: response.snippet.thumbnails.medium.url
                    , title: response.snippet.title
                    , likePercentage: Math.round(100 * likeCount / (likeCount + dislikeCount))

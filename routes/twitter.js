@@ -2,6 +2,7 @@ var async = require('async')
   , request = require('request')
   , _ = require('underscore')
   , client = require('redis').createClient()
+  , utils = require('../lib/utils')
   , prefix = 'preview-twitter:'
   , twitter = require('ntwitter')
   , twit = new twitter({
@@ -55,6 +56,9 @@ module.exports = function (req, res, next) {
           }
           // Just store the data we need
           result = _.pick(result, 'screen_name','profile_banner_url', 'profile_image_url', 'name', 'description','statuses_count','friends_count','followers_count');
+          result.statuses_count = utils.formatNumber(result.statuses_count, ' ');
+          result.followers_count = utils.formatNumber(result.followers_count, ' ');
+          result.friends_count = utils.formatNumber(result.friends_count, ' ');
           obj = { entry: result.screen_name, result: result};
           client.set(prefix+ result.screen_name.toLowerCase() , JSON.stringify(obj));
           return obj;
