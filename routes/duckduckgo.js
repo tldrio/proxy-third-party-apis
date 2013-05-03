@@ -1,7 +1,9 @@
 var async = require('async')
   , request = require('request')
   , _ = require('underscore')
-  , WikipediaAbstracts = require('../lib/models').WikipediaAbstracts;
+  , client = require('redis').createClient()
+  , WikipediaAbstracts = require('../lib/models').WikipediaAbstracts
+  , prefix = 'preview-ddg:';
 
 module.exports = function (req, res, next) {
    var batch = []
@@ -12,13 +14,26 @@ module.exports = function (req, res, next) {
   async.mapLimit( req.body.batch
    , 5
    , function (entry, callback) {
-    WikipediaAbstracts.findOne({ entry_lowercase: entry.toLowerCase()}, function (err, reply) {
-        if (err) {
-          return callback(err);
+     client.get(prefix+ entry, function (err, redisReply) {
+        WikipediaAbstracts.findOne({ entry_lowercase: entry.toLowerCase()}, function (_err, mongoReply) {
+        if (err || _err) {
+          return callback({err: err, _err:_err});
         }
-        if (reply) {
-          console.log('[DDG][CACHE]', entry);
-          callback(null, reply);
+        if (redisReply && !mongoReply) {
+           WikipediaAbstracts.findOneAndUpdate({ entry_lowercase: entry.toLowerCase() }
+                                          , JSON.parse(redisReply)
+                                          , { upsert: true}
+                                          , function (err) {
+                                            if (err) {
+                                              console.log('EEERRRR upserting', err, entry);
+                                            }
+                                          });
+          console.log('[DDG][CACHE REDIS]', entry)
+          return callback(null, JSON.parse(redisReply));
+        }
+        else if (mongoReply) {
+          console.log('[DDG][CACHE MONGO]', entry);
+          callback(null, mongoReply);
         }
         else {
          console.log('[DDG][NONCACHE]', entry);
@@ -36,6 +51,7 @@ module.exports = function (req, res, next) {
                         console.log('[DDG][RESPONSE]', entry);
 
                       if (previewText.length) {
+                        //client.set(prefix+ entry, JSON.stringify({ entry: entry, previewText: previewText, heading: response.Heading }));
                         WikipediaAbstracts.findOneAndUpdate({ entry_lowercase: entry.toLowerCase() }
                                                         , { entry: entry, previewText: previewText, heading: response.Heading }
                                                         , { upsert: true}
@@ -64,6 +80,7 @@ module.exports = function (req, res, next) {
         }
 
       });
+    });
 
    }, function (err, results) {
         if (err) {
