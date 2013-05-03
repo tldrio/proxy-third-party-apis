@@ -19,6 +19,9 @@ module.exports = function (req, res, next) {
         if (err || _err) {
           return callback({err: err, _err:_err});
         }
+        if (redisReply) {
+          client.del(prefix+entry);
+        }
         if (redisReply && !mongoReply) {
            WikipediaAbstracts.findOneAndUpdate({ entry_lowercase: entry.toLowerCase() }
                                           , JSON.parse(redisReply)
