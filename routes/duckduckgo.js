@@ -1,9 +1,7 @@
 var async = require('async')
   , request = require('request')
   , _ = require('underscore')
-  , client = require('redis').createClient()
-  , WikipediaAbstracts = require('../lib/models').WikipediaAbstracts
-  , prefix = 'preview-ddg:';
+  , WikipediaAbstracts = require('../lib/models').WikipediaAbstracts;
 
 module.exports = function (req, res, next) {
    var batch = []
@@ -38,7 +36,6 @@ module.exports = function (req, res, next) {
                         console.log('[DDG][RESPONSE]', entry);
 
                       if (previewText.length) {
-                        //client.set(prefix+ entry, JSON.stringify({ entry: entry, previewText: previewText, heading: response.Heading }));
                         WikipediaAbstracts.findOneAndUpdate({ entry_lowercase: entry.toLowerCase() }
                                                         , { entry: entry, previewText: previewText, heading: response.Heading }
                                                         , { upsert: true}

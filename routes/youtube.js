@@ -1,9 +1,7 @@
 var async = require('async')
   , request = require('request')
   , _ = require('underscore')
-  , client = require('redis').createClient()
-  , utils = require('../lib/utils')
-  , prefix = 'preview-youtube:';
+  , utils = require('../lib/utils');
 
 module.exports = function (req, res, next) {
    var batch = req.body.batch

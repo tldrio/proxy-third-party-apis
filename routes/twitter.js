@@ -1,7 +1,6 @@
 var async = require('async')
   , request = require('request')
   , _ = require('underscore')
-  , client = require('redis').createClient()
   , utils = require('../lib/utils')
   , twitter = require('ntwitter')
   , TwitterProfiles = require('../lib/models').TwitterProfiles
