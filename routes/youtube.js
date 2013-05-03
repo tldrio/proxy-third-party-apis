@@ -23,6 +23,7 @@ module.exports = function (req, res, next) {
           , duration = response.contentDetails.duration.match(/PT((\d{1,5})M)?((\d{1,2})S)?/);
 
         response = { viewCount: utils.formatNumber(response.statistics.viewCount,' ')
+                   , id: entry
                    , likeCount: utils.formatNumber(likeCount, ' ')
                    , dislikeCount: utils.formatNumber(dislikeCount, ' ')
                    , commentCount: utils.formatNumber(response.statistics.commentCount, ' ')
