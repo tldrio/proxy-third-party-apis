@@ -3,8 +3,8 @@ var async = require('async')
   , _ = require('underscore')
   , client = require('redis').createClient()
   , utils = require('../lib/utils')
-  , prefix = 'preview-twitter:'
   , twitter = require('ntwitter')
+  , TwitterProfiles = require('../lib/models').TwitterProfiles
   , twit = new twitter({
     consumer_key: 'nvLiQe1xD75twWMuwfTrGA',
     consumer_secret: 'MWm5gfEz0dlerSoeydFHRSujZIWtcP8dE83RdrpiiA',
@@ -23,12 +23,12 @@ module.exports = function (req, res, next) {
   batch = _.without(batch, 'share');
   console.log('[TWITTER][BATCH]', batch);
   async.map( batch, function (entry, callback) {
-    client.get(prefix+ entry.toLowerCase(), function (err, reply) {
+    TwitterProfiles.findOne({ screen_name_lowercase: entry.toLowerCase()}, function (err, reply) {
       if (err) {
         return callback(err);
       }
       if (reply) {
-        callback(null, JSON.parse(reply));
+        callback(null, { entry: reply.screen_name ,result:reply });
       }
       else {
         callback(null, { entry: entry });
@@ -48,19 +48,29 @@ module.exports = function (req, res, next) {
           res.json(408);
         }
         results = _.map(results, function (result) {
-          var obj;
+          var obj
+            , profile;
           if (result.profile_banner_url && !result.profile_banner_url.match(/brand_banners/)) {
             result.profile_banner_url = result.profile_banner_url + '/mobile';
           } else {
             result.profile_banner_url = 'https://abs.twimg.com/a/1366855397/t1/img/grey_header_web.png';
           }
           // Just store the data we need
-          result = _.pick(result, 'screen_name','profile_banner_url', 'profile_image_url', 'name', 'description','statuses_count','friends_count','followers_count');
           result.statuses_count = utils.formatNumber(result.statuses_count, ' ');
           result.followers_count = utils.formatNumber(result.followers_count, ' ');
           result.friends_count = utils.formatNumber(result.friends_count, ' ');
+          result.screen_name_lowercase = result.screen_name.toLowerCase();
+
+          //Store in DB
+          TwitterProfiles.findOneAndUpdate({ screen_name_lowercase: result.screen_name_lowercase }
+                                          , result
+                                          , { upsert: true}
+                                          , function (err) {
+                                            if (err) {
+                                              console.log('EEERRRR upserting', err, result.screen_name);
+                                            }
+                                          });
           obj = { entry: result.screen_name, result: result};
-          client.set(prefix+ result.screen_name.toLowerCase() , JSON.stringify(obj));
           return obj;
         });
         res.json(200, results);

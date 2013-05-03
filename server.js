@@ -1,7 +1,16 @@
 var express = require('express')
   , server = express()
   , routes = require('./lib/routes')
-  , config = require('./lib/config');
+  , config = require('./lib/config')
+  , DbObject = require('./lib/db')
+  , app = {};
+
+// Create connection to the database
+app.db = new DbObject( config.dbHost
+                     , config.dbName
+                     , config.dbPort
+                     );
+
 
 
 server.enable('trust proxy');
@@ -48,4 +57,8 @@ server.post('/duckduckgo', routes.duckduckgo );
 server.post('/twitter', routes.twitter );
 server.post('/youtube', routes.youtube );
 
-server.listen(8914);
+app.db.connectToDatabase(function (err) {
+  if (!err) { console.log('Connection to the database opened'); }
+  server.listen(8914);
+});
+

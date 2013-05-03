@@ -24,7 +24,8 @@
     "async": "~0.2.7",
     "underscore": "~1.4.4",
     "redis": "~0.8.3",
-    "ntwitter": "~0.5.0"
+    "ntwitter": "~0.5.0",
+    "mongoose": "~3.6.9"
   },
   "main": "server",
   "licence": "fucking proprietary license"
