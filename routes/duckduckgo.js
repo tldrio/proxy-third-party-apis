@@ -5,13 +5,14 @@ var async = require('async')
   , WikipediaAbstracts = require('../lib/models').WikipediaAbstracts
   , prefix = 'preview-ddg:'
   , execTime = require('exec-time')
-  , profiler = new execTime('DDGPROF')
+  , profiler
   ;
 
 module.exports = function (req, res, next) {
    var batch = []
     , results = [];
 
+  profiler = new execTime('DDGPROF ' + req.ip)
   profiler.beginProfiling();
   profiler.step("Begin");
 
