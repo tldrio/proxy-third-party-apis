@@ -34,9 +34,6 @@ function parseFeed (feedUrl, callback) {
         articlePreviewData.image = match[2];
       }
       articlePreview = new ArticlePreviews(articlePreviewData);
-      console.log('-------');
-      console.log(article);
-      process.exit();
       articlePreview.save(function (err) {
         articleSaved ++;
         if (done && articleSaved === articleFetched) {
@@ -53,4 +50,6 @@ function parseFeed (feedUrl, callback) {
 db.connectToDatabase(function (err) {
   if (!err) { console.log('Connection to the database opened'); }
   async.each(feeds, parseFeed, function (err) { process.exit();});
+  //parseFeed('http://feed.torrentfreak.com/Torrentfreak');
+  //parseFeed('http://feeds.feedburner.com/TorrentfreakBits');
 });
