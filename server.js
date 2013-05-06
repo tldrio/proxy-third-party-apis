@@ -56,6 +56,7 @@ server.use(server.router);
 server.post('/duckduckgo', routes.duckduckgo );
 server.post('/twitter', routes.twitter );
 server.post('/youtube', routes.youtube );
+server.post('/articles', routes.articles );
 
 app.db.connectToDatabase(function (err) {
   if (!err) { console.log('Connection to the database opened'); }
