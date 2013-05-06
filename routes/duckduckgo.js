@@ -3,11 +3,17 @@ var async = require('async')
   , _ = require('underscore')
   , client = require('redis').createClient()
   , WikipediaAbstracts = require('../lib/models').WikipediaAbstracts
-  , prefix = 'preview-ddg:';
+  , prefix = 'preview-ddg:'
+  , execTime = require('exec-time')
+  , profiler = new execTime('DDGPROF')
+  ;
 
 module.exports = function (req, res, next) {
    var batch = []
     , results = [];
+
+  profiler.beginProfiling();
+  profiler.step("Begin");
 
   if (!req.body.batch) { req.body.batch = []; }
 
@@ -86,6 +92,7 @@ module.exports = function (req, res, next) {
     });
 
    }, function (err, results) {
+       profiler.step("Finished getting articles");
         if (err) {
           console.log('[DDG][ERROR] in batch', err);
           return res.send(408, err);
