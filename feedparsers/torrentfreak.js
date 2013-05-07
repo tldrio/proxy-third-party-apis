@@ -6,8 +6,7 @@ var FeedParser = require('feedparser')
   , request = require('request')
   , async = require('async')
   , db
-  , feeds = ['http://feed.torrentfreak.com/Torrentfreak'
-    ,'http://feeds.feedburner.com/TorrentfreakBits'];
+  , feeds = ['http://feed.torrentfreak.com/Torrentfreak' ];
 // Create connection to the database
 db = new DbObject( config.dbHost
                  , config.dbName
